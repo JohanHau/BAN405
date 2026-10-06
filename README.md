@@ -57,6 +57,16 @@ Keeping this structure matters: the notebooks load data with paths like `../data
 > ⚠️ **Material is subject to change until the link for that week has been posted on Canvas.**
 > Everything is published up front so you can browse ahead if you want to — but until a week goes live on Canvas, its content will still be revised.
 
+## How to run
+
+The notebooks run in the `ban405` conda environment. Build it once, from this folder:
+
+```
+conda env create --file environment.yml
+```
+
+Then open this folder in Positron, and select `ban405` as the notebook kernel.
+
 ---
 
 ## License
