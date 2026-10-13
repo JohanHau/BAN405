@@ -24,8 +24,8 @@ Thumbs.db
 # ---------------------------------------------------------------------------
 # Derived data, figures and tables written by the lecture notebooks
 # ---------------------------------------------------------------------------
-data/titanic.xlsx
-data/titanic_pipe.csv
+week07/*.csv
+week07/*.xlsx
 *.png
 *.jpg
 *.jpeg

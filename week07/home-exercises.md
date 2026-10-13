@@ -1,20 +1,12 @@
 # Week 07 — Home exercises
 
-Work through these before the next lecture. They cover everything from [`07-pandas-basics.ipynb`](07-pandas-basics.ipynb): NumPy arrays, `Series` and `DataFrame`, the index and alignment, reading awkward files, the first look, selecting and filtering, changing values, and cleaning.
+Work through these before the next lecture. They cover everything from [`07-pandas-basics.ipynb`](07-pandas-basics.ipynb): NumPy arrays, `Series` and `DataFrame`, the index and alignment, reading awkward files, the first look, selecting and filtering, changing values, cleaning, new columns with `np.where` and `np.select`, and a function that loads and cleans.
 
-Work in a **notebook** this time rather than a script — from here on, that is the format everything in this course is written and handed in as. Solution proposals are in this folder as `home_exercise_N_solution.ipynb`, with their output kept so you can read them without running them. Try each exercise properly before you open them.
+Work in a **notebook** this time rather than a script — from here on, that is the format everything in this course is written in. Solution proposals are in this folder as `home_exercise_N_solution.ipynb`, with their output kept so you can read them without running them. Try each exercise properly before you open them.
 
 > 📝 **Note:** Every exercise assumes your notebook sits in this week's folder, so data is at `../data/`. Start it the way the lecture notebook starts: import what you need, load your own data, and make sure the whole thing runs from top to bottom before you call it finished.
 
----
-
-## Version control (optional)
-
-If you want the practice: open a terminal in this week's folder, run `git init`, and make a first commit before you start. Then commit after each exercise, with a message saying what you did. When you are finished, `git log --oneline` shows you your own week.
-
-Add a `.gitignore` containing `__pycache__/` and `.ipynb_checkpoints/` so that git stops offering to track files you did not write.
-
-This is optional and nothing depends on it. A repository per week is not how you would organize a real project — it is a sandbox, so that a mess costs you one week and no more. If yours ends up in a state you cannot fix, delete the `.git` folder. Your files are untouched, and you start fresh next week.
+> 💡 **Tip:** If you have set up a git repository for your BAN405 folder, commit as you work and push when you finish.
 
 ---
 
@@ -26,7 +18,7 @@ Two things the lecture did not cover.
 
 Printing a 6 240-row table is not looking at it. Positron has two better ways.
 
-The **Variables pane** in the sidebar lists everything currently in memory, with its type and size — so you can see at a glance that `co2` is a DataFrame of (6240, 11) and that `mask` is a Series of booleans. When a calculation goes wrong, the Variables pane usually tells you why faster than any amount of re-reading.
+The **Variables pane** in the sidebar lists everything currently in memory, with its type and size — so you can see at a glance that `co2` is a DataFrame of (6240, 11) and that `mask` is a Series of booleans. 
 
 Click on a DataFrame there and it opens in the **data viewer**: a real spreadsheet-like grid you can scroll and sort, with each column's type in the header. Use it to *look* at data. Use `.head()`, `.info()` and `.describe()` when you want the answer recorded in your notebook, because the viewer leaves no trace in the document.
 
@@ -164,6 +156,8 @@ For each file, read it into a DataFrame properly and display its shape and its c
 1. `../data/survey_data.csv`
 2. `../data/eurostat.xlsx` — this one needs three arguments, not one. It should end up with 24 columns.
 
+> 💡 **Tip:** Keep the documentation open while you work — [`read_csv`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) for the first file and [`read_excel`](https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html) for the second — and search it as described in *Before you start*. Everything you need is among these parameters: `sep`, `header`, `skiprows`, `sheet_name`, `usecols` and `na_values`. Not all of them are needed; working out which is part of the exercise.
+
 For the second file, also answer in a markdown cell: the first column of the result is not really a country name for every row. Which rows are not countries, and how would you recognize them if nobody told you?
 
 ---
@@ -175,14 +169,12 @@ The first thing to do with an unfamiliar dataset is find out what is in it. Load
 1. How many rows and columns there are.
 2. The type of every column, and which column types would surprise somebody who had not read the lecture.
 3. How many distinct entities the data covers, and which years.
-4. How many values are missing in each column, and which two columns have none.
+4. How many values are missing in each column, and which two of the indicators have none.
 5. The five entities with the highest total emissions in 2023. Are they all countries?
 6. All rows for Norway, showing only `year`, `co2_total` and `gdp_pc`, for the last five years in the data.
 7. The rows for **2020** where GDP per capita was above 50 000 **and** renewable energy was above 40% of final consumption. How many are there, and which countries?
 
    Then try the same query for 2023 and explain, in one sentence, why the answer is what it is. Your answer to question 4 has the reason in it.
-
-> 💡 **Tip:** Question 5 needs `.sort_values()`, which the lecture did not cover. Look it up — `help(pd.DataFrame.sort_values)` — and note the `ascending` parameter. That is exactly the documentation-searching skill from "Before you start".
 
 ---
 
@@ -200,6 +192,11 @@ Load `../data/co2_emissions.csv`.
    ```python
    messy = pd.Series(["41.6", "434.3", "n/a", "", "43.5", "1 200", "12.4"])
    ```
+
+5. Add a column `mostly_renewable` that is `"yes"` where `renew_energy` is above 50 and `"no"`
+   otherwise, using `np.where`. Count the `"no"` rows, and then count how many of them are `"no"`
+   only because there is no figure at all. Say in a markdown cell what that means for anyone who
+   uses the column.
 
 ---
 
@@ -224,7 +221,5 @@ Then, below the function:
 - Display the five entities with the highest emissions **per person** in 2023.
 - Then display the five entities with the highest **total** emissions in 2023.
 - Compare the two lists in a markdown cell. One of them is usable as it stands and the other is not. Say which, why, and what would have to be done to the data to fix it.
-
-> 💡 **Tip:** Keep the function in its own cell, with the calls that demonstrate it in the cells below. You will want this function again next week, and a function that is tangled up with the code that uses it is a function you end up rewriting.
 
 > 💡 **Tip:** To leave the rows with no GDP figure as missing, set them with `.loc` after the `np.select` call, as in the lecture. Passing `default=np.nan` looks like it should work and raises a `TypeError` instead — `np.select` refuses to mix a numeric default with text choices.
